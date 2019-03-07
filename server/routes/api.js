@@ -1,7 +1,6 @@
 const express = require("express");
 const router = express.Router();
 
-const User = require("../models/User");
 const Bike = require("../models/Bike");
 
 /**
@@ -19,7 +18,7 @@ const isLoggedIn = function(req, res, next) {
   next();
 };
 
-const hasRentedBike = function(req, res, next) {
+const confirmNoRent = function(req, res, next) {
   if (!req.session.hasRentedBike) {
     return res.json({
       error: true,
@@ -31,7 +30,7 @@ const hasRentedBike = function(req, res, next) {
   next();
 };
 
-const hasNoRentedBike = function(req, res, next) {
+const confirmRent = function(req, res, next) {
   if (req.session.hasRentedBike) {
     return res.json({
       error: true,
@@ -53,13 +52,9 @@ function handleBikeNotFoundError(err) {
 }
 
 /**
- * API routes
+ * Simulate login with a username
+ * Accepts a POST param `username`
  */
-router.get("/", (req, res) => {
-  res.send("api works");
-});
-
-// Simulate login with a username
 router.post("/login", (req, res) => {
   req.session.username = req.body.username;
   res.json({
@@ -71,10 +66,11 @@ router.post("/login", (req, res) => {
   });
 });
 
-// Simulate logout by clearing session
+/**
+ * Simulate logout by clearing session
+ */
 router.get("/logout", (req, res) => {
-  delete req.session.username;
-  delete req.session.hasRentedBike;
+  req.session.destroy();
   res.json({
     error: false,
     message: "User logged out",
@@ -82,6 +78,9 @@ router.get("/logout", (req, res) => {
   });
 });
 
+/**
+ * List all bikes
+ */
 router.get("/bikes", (req, res) => {
   Bike.find((err, results) => {
     if (err) {
@@ -101,23 +100,39 @@ router.get("/bikes", (req, res) => {
   });
 });
 
+/**
+ * Create a new bike
+ */
 router.post("/bike/new", (req, res) => {
-  Bike.create(
-    {
-      username: "",
-      latitude: req.body.latitude,
-      longitude: req.body.longitude,
-      rented: false
-    },
-    (err, savedBike) => {
-      if (err) res.json(err);
+  const toSave = {
+    username: "",
+    latitude: req.body.latitude,
+    longitude: req.body.longitude,
+    rented: false
+  };
 
-      res.json(savedBike);
+  Bike.create(toSave, (err, savedBike) => {
+    if (err) {
+      res.status(400);
+      return res.json({
+        error: true,
+        message: "Error creating new bike record",
+        data: null
+      });
     }
-  );
+
+    res.json({
+      error: false,
+      message: "New bike created",
+      data: savedBike
+    });
+  });
 });
 
-router.post("/return-bike/:id", isLoggedIn, hasRentedBike, (req, res) => {
+/**
+ * Return a rented bike
+ */
+router.post("/return-bike/:id", isLoggedIn, confirmNoRent, (req, res) => {
   const id = req.params.id;
 
   Bike.findById(id, (err, bike) => {
@@ -146,18 +161,20 @@ router.post("/return-bike/:id", isLoggedIn, hasRentedBike, (req, res) => {
         // add to session
         req.session.hasRentedBike = false;
 
-        // TODO: sending old value instead of changed one
         res.json({
           error: false,
           message: "Bike was returned",
-          data: savedBike
+          data: { bikeId: id }
         });
       });
     }
   });
 });
 
-router.get("/rent-bike/:id", isLoggedIn, hasNoRentedBike, (req, res) => {
+/**
+ * Rent an unrented bike
+ */
+router.get("/rent-bike/:id", isLoggedIn, confirmRent, (req, res) => {
   const id = req.params.id;
 
   Bike.findById(id, (err, bike) => {
@@ -183,17 +200,19 @@ router.get("/rent-bike/:id", isLoggedIn, hasNoRentedBike, (req, res) => {
         // add to session
         req.session.hasRentedBike = true;
 
-        // TODO: sending old value instead of changed one
         res.json({
           error: false,
           message: "Bike was rented",
-          data: savedBike
+          data: { bikeId: id },
         });
       });
     }
   });
 });
 
+/**
+ * Get a bike record by ID
+ */
 router.get("/bike/:id", (req, res) => {
   const id = req.params.id;
 
@@ -208,6 +227,9 @@ router.get("/bike/:id", (req, res) => {
   });
 });
 
+/**
+ * Update a bike record
+ */
 router.put("/bike/:id", (req, res) => {
   const id = req.params.id;
   const toSave = {
@@ -226,30 +248,6 @@ router.put("/bike/:id", (req, res) => {
       data: savedBike
     });
   });
-});
-
-router.post("/user/new", (req, res) => {
-  User.create(
-    {
-      name: req.body.name
-    },
-    (err, user) => {
-      if (err) {
-        res.status(400);
-        res.json({
-          error: true,
-          message: "Error while creating new user",
-          data: null
-        });
-      }
-
-      res.json({
-        error: false,
-        message: "New user created",
-        data: user
-      });
-    }
-  );
 });
 
 module.exports = router;
