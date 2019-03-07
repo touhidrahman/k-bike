@@ -18,7 +18,7 @@ const isLoggedIn = function(req, res, next) {
   next();
 };
 
-const confirmNoRent = function(req, res, next) {
+const haltIfNotRented = function(req, res, next) {
   if (!req.session.hasRentedBike) {
     return res.json({
       error: true,
@@ -30,7 +30,7 @@ const confirmNoRent = function(req, res, next) {
   next();
 };
 
-const confirmRent = function(req, res, next) {
+const haltIfRented = function(req, res, next) {
   if (req.session.hasRentedBike) {
     return res.json({
       error: true,
@@ -76,6 +76,32 @@ router.get("/logout", (req, res) => {
     message: "User logged out",
     data: null
   });
+});
+
+/**
+ * Get current user
+ */
+router.get("/me", isLoggedIn, (req, res) => {
+  res.json({
+    error: false,
+    message: "Logged in user",
+    data: { username: req.session.username }
+  });
+});
+
+/**
+ * Get currently rented bike
+ */
+router.get("/my-bike", isLoggedIn, haltIfNotRented, (req, res) => {
+  Bike.findOne({username: req.session.username}, (err, bike) => {
+    if (err) handleBikeNotFoundError(err);
+
+    res.json({
+      error: false,
+      message: "Currently rented bike",
+      data: bike
+    });
+  })
 });
 
 /**
@@ -132,7 +158,7 @@ router.post("/bike/new", (req, res) => {
 /**
  * Return a rented bike
  */
-router.post("/return-bike/:id", isLoggedIn, confirmNoRent, (req, res) => {
+router.post("/return-bike/:id", isLoggedIn, haltIfNotRented, (req, res) => {
   const id = req.params.id;
 
   Bike.findById(id, (err, bike) => {
@@ -149,9 +175,9 @@ router.post("/return-bike/:id", isLoggedIn, confirmNoRent, (req, res) => {
     // if rented, only then return
     if (bike && bike.rented) {
       const toSave = {
-        username: req.session.username,
-        latitude: req.body.latitude, // new location lat
-        longitude: req.body.longitude, // new location long
+        username: null,                 // release user
+        latitude: req.body.latitude,    // new location lat
+        longitude: req.body.longitude,  // new location long
         rented: false
       };
 
@@ -174,7 +200,7 @@ router.post("/return-bike/:id", isLoggedIn, confirmNoRent, (req, res) => {
 /**
  * Rent an unrented bike
  */
-router.get("/rent-bike/:id", isLoggedIn, confirmRent, (req, res) => {
+router.get("/rent-bike/:id", isLoggedIn, haltIfRented, (req, res) => {
   const id = req.params.id;
 
   Bike.findById(id, (err, bike) => {
@@ -203,7 +229,7 @@ router.get("/rent-bike/:id", isLoggedIn, confirmRent, (req, res) => {
         res.json({
           error: false,
           message: "Bike was rented",
-          data: { bikeId: id },
+          data: { bikeId: id }
         });
       });
     }
