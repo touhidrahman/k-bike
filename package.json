@@ -8,7 +8,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "nodemon": "nodemon server.js"
+    "backend": "nodemon server.js"
   },
   "private": true,
   "dependencies": {
@@ -20,11 +20,13 @@
     "@angular/platform-browser": "~7.2.0",
     "@angular/platform-browser-dynamic": "~7.2.0",
     "@angular/router": "~7.2.0",
+    "@asymmetrik/ngx-leaflet": "^5.0.1",
     "body-parser": "^1.18.3",
     "connect-mongo": "^2.0.3",
     "core-js": "^2.5.4",
     "express": "^4.16.4",
     "express-session": "^1.15.6",
+    "leaflet": "^1.4.0",
     "method-override": "^3.0.0",
     "mongoose": "^5.4.17",
     "rxjs": "~6.3.3",
@@ -38,6 +40,7 @@
     "@angular/language-service": "~7.2.0",
     "@types/jasmine": "~2.8.8",
     "@types/jasminewd2": "~2.0.3",
+    "@types/leaflet": "^1.4.3",
     "@types/node": "~8.9.4",
     "codelyzer": "~4.5.0",
     "jasmine-core": "~2.99.1",
