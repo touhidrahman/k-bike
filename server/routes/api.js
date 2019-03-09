@@ -34,7 +34,7 @@ const haltIfRented = function(req, res, next) {
   if (req.session.hasRentedBike) {
     return res.json({
       error: true,
-      message: "User have a rented bike already",
+      message: "User already has a rented bike",
       data: null
     });
   }
@@ -57,6 +57,7 @@ function handleBikeNotFoundError(err) {
  */
 router.post("/login", (req, res) => {
   req.session.username = req.body.username;
+
   res.json({
     error: false,
     message: "User logged in",
@@ -71,6 +72,7 @@ router.post("/login", (req, res) => {
  */
 router.get("/logout", (req, res) => {
   req.session.destroy();
+
   res.json({
     error: false,
     message: "User logged out",
@@ -93,7 +95,17 @@ router.get("/me", isLoggedIn, (req, res) => {
  * Get currently rented bike
  */
 router.get("/my-bike", isLoggedIn, haltIfNotRented, (req, res) => {
-  Bike.findOne({username: req.session.username}, (err, bike) => {
+  const id = req.session.rentedBikeId;
+
+  if (!id) {
+    return res.json({
+      error: true,
+      message: "No bike is currently being rented",
+      data: null
+    });
+  }
+
+  Bike.findById(id, (err, bike) => {
     if (err) handleBikeNotFoundError(err);
 
     res.json({
@@ -131,7 +143,7 @@ router.get("/bikes", (req, res) => {
  */
 router.post("/bike/new", (req, res) => {
   const toSave = {
-    username: "",
+    name: req.body.name,
     latitude: req.body.latitude,
     longitude: req.body.longitude,
     rented: false
@@ -175,7 +187,6 @@ router.post("/return-bike/:id", isLoggedIn, haltIfNotRented, (req, res) => {
     // if rented, only then return
     if (bike && bike.rented) {
       const toSave = {
-        username: null,                 // release user
         latitude: req.body.latitude,    // new location lat
         longitude: req.body.longitude,  // new location long
         rented: false
@@ -186,6 +197,7 @@ router.post("/return-bike/:id", isLoggedIn, haltIfNotRented, (req, res) => {
 
         // add to session
         req.session.hasRentedBike = false;
+        req.session.rentedBikeId = null;
 
         res.json({
           error: false,
@@ -201,6 +213,10 @@ router.post("/return-bike/:id", isLoggedIn, haltIfNotRented, (req, res) => {
  * Rent an unrented bike
  */
 router.get("/rent-bike/:id", isLoggedIn, haltIfRented, (req, res) => {
+  // NOTE: for simplicity reason, we are not storing the
+  // rented bike - user 1:1 info in db. So logout while renting
+  // will create stray bikes with rented = true status
+  // This will be handled in a full-scale app, ignoring in this case.
   const id = req.params.id;
 
   Bike.findById(id, (err, bike) => {
@@ -208,6 +224,7 @@ router.get("/rent-bike/:id", isLoggedIn, haltIfRented, (req, res) => {
 
     if (bike && bike.rented) {
       res.json({
+        error: true,
         message: "The bike is already rented",
         data: null
       });
@@ -216,7 +233,6 @@ router.get("/rent-bike/:id", isLoggedIn, haltIfRented, (req, res) => {
     // if not rented, only then rent
     if (bike && !bike.rented) {
       const toSave = {
-        username: req.session.username,
         rented: true
       };
 
@@ -225,6 +241,7 @@ router.get("/rent-bike/:id", isLoggedIn, haltIfRented, (req, res) => {
 
         // add to session
         req.session.hasRentedBike = true;
+        req.session.rentedBikeId = id;
 
         res.json({
           error: false,
@@ -254,12 +271,29 @@ router.get("/bike/:id", (req, res) => {
 });
 
 /**
+ * Delete a bike record by ID
+ */
+router.delete("/bike/:id", (req, res) => {
+  const id = req.params.id;
+
+  Bike.findByIdAndDelete(id, (err, bike) => {
+    if (err) handleBikeNotFoundError(err);
+
+    res.json({
+      error: false,
+      message: "Bike record deleted",
+      data: null
+    });
+  });
+});
+
+/**
  * Update a bike record
  */
 router.put("/bike/:id", (req, res) => {
   const id = req.params.id;
   const toSave = {
-    username: req.body.username,
+    name: req.body.name,
     latitude: req.body.latitude,
     longitude: req.body.longitude,
     rented: req.body.rented

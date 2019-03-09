@@ -3,7 +3,8 @@ import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { LeafletModule } from '@asymmetrik/ngx-leaflet';
+
+import { AgmCoreModule } from '@agm/core';
 
 @NgModule({
   declarations: [
@@ -12,7 +13,9 @@ import { LeafletModule } from '@asymmetrik/ngx-leaflet';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    LeafletModule.forRoot(),
+    AgmCoreModule.forRoot({
+      apiKey: 'AIzaSyDK51O5ilaoe3wHk53UkpeSbkw5srJ2jj8'
+    })
   ],
   providers: [],
   bootstrap: [AppComponent]

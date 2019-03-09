@@ -1,9 +1,6 @@
 <div class="map-container">
-  <div
-    class="map"
-    leaflet
-    [leafletOptions]="options"
-    [leafletLayersControl]="layersControl"
-  ></div>
+  <agm-map class="map" [latitude]="markers[0][0]" [longitude]="markers[0][1]">
+    <agm-marker *ngFor="let marker of markers" [latitude]="marker[0]" [longitude]="marker[1]"></agm-marker>
+  </agm-map>
 </div>
 <router-outlet></router-outlet>

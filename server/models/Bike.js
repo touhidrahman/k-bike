@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const bikeSchema = new mongoose.Schema({
-  username: String,
+  name: String,
   latitude: Number,
   longitude: Number,
   rented: Boolean
