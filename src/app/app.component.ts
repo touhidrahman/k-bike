@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ApiService } from './api.service';
 
 @Component({
   selector: 'app-root',
@@ -6,10 +7,12 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-  title = 'k-bike';
   // lat: number = 51.678418;
   // lng: number = 7.809007;
   markers: any;
+  bikes: any;
+
+  constructor(private api: ApiService) {}
 
   ngOnInit(): void {
     this.markers = [
@@ -19,5 +22,10 @@ export class AppComponent implements OnInit {
       [51.87994, 8.7263],
       [51.87994, 8.7263]
     ];
+
+    this.api.getBikes().subscribe(res => {
+      this.bikes = res.data;
+      console.log('bikes :', this.bikes); // ! remove
+    });
   }
 }

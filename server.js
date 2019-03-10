@@ -7,11 +7,14 @@ const mongoose = require('mongoose');
 const session = require('express-session');
 const MongoStore = require('connect-mongo')(session);
 const methodOverride = require('method-override');
+const cors = require('cors');
 
 // Get API routes
 const api = require('./server/routes/api');
 
 const app = express();
+
+app.use(cors());
 
 mongoose.set('useFindAndModify', false);
 mongoose.set('useCreateIndex', true);
