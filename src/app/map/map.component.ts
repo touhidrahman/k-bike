@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Bike } from '../app.types';
-import { ApiService } from '../api.service';
+import { BikeService } from '../bike.service';
 
 @Component({
   selector: 'app-map',
@@ -13,7 +13,7 @@ export class MapComponent implements OnInit {
   rentedBike: Bike;
   user: { username: string };
 
-  constructor(private api: ApiService) { }
+  constructor(private api: BikeService) { }
 
   ngOnInit(): void {
     // this.api.getLoggedInUser().subscribe(res => {

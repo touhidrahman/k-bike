@@ -7,7 +7,7 @@ import { Bike, ApiResponse, BASE_URL } from './app.types';
 @Injectable({
   providedIn: 'root'
 })
-export class ApiService {
+export class BikeService {
 
   constructor(private http: HttpClient) { }
 
