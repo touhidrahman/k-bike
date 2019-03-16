@@ -14,7 +14,7 @@ router.post("/return/:id", checkAuth, BikeController.returnBike);
 
 router.get("", BikeController.getBikes);
 
-router.get("/my", checkAuth, BikeController.getBikeOfCurrentUser);
+router.get("/my-bike", checkAuth, BikeController.getBikeOfCurrentUser);
 
 router.get("/:id", BikeController.getBike);
 

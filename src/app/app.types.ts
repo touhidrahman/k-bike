@@ -4,5 +4,13 @@ export interface Bike {
   latitude?: number;
   longitude?: number;
   rented?: boolean;
-  [key: string]: any;
+  rentedBy?: string;
 }
+
+export interface ApiResponse {
+  error?: boolean;
+  message?: string;
+  data?: any;
+}
+
+export const BASE_URL = 'http://localhost:3000/api';

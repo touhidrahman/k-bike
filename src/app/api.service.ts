@@ -2,16 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { of, Observable } from 'rxjs';
-import { Bike } from './app.types';
-
-
-export interface ApiResponse {
-  error: boolean;
-  message: string;
-  data: any;
-}
-
-export const BASE_URL = 'http://localhost:3000/api';
+import { Bike, ApiResponse, BASE_URL } from './app.types';
 
 @Injectable({
   providedIn: 'root'
@@ -26,42 +17,26 @@ export class ApiService {
   }
 
   createBike(bike: Bike): Observable<ApiResponse> {
-    return this.http.post<ApiResponse>(`${BASE_URL}/bike/new`, bike);
+    return this.http.post<ApiResponse>(`${BASE_URL}/bikes`, bike);
   }
 
   getBikeById(id: string): Observable<ApiResponse> {
-    return this.http.get<ApiResponse>(`${BASE_URL}/bike/${id}`);
+    return this.http.get<ApiResponse>(`${BASE_URL}/bikes/${id}`);
   }
 
   deleteBike(id: string): Observable<ApiResponse> {
-    return this.http.delete<ApiResponse>(`${BASE_URL}/bike/${id}`);
-  }
-
-  updateBike(id: string, bike: Bike): Observable<ApiResponse> {
-    return this.http.put<ApiResponse>(`${BASE_URL}/bike/${id}`, bike);
-  }
-
-  getLoggedInUser(): Observable<ApiResponse> {
-    return this.http.get<ApiResponse>(`${BASE_URL}/me`);
+    return this.http.delete<ApiResponse>(`${BASE_URL}/bikes/${id}`);
   }
 
   getCurrentlyRentedBike(): Observable<ApiResponse> {
-    return this.http.get<ApiResponse>(`${BASE_URL}/my-bike`);
+    return this.http.get<ApiResponse>(`${BASE_URL}/bikes/my-bike`);
   }
 
   rentBike(id: string): Observable<ApiResponse> {
-    return this.http.get<ApiResponse>(`${BASE_URL}/rent-bike/${id}`);
+    return this.http.get<ApiResponse>(`${BASE_URL}/bikes/rent/${id}`);
   }
 
   returnBike(id: string, latitude: number, longitude: number): Observable<ApiResponse> {
-    return this.http.post<ApiResponse>(`${BASE_URL}/return-bike/${id}`, {latitude, longitude});
-  }
-
-  login(username: string): Observable<ApiResponse> {
-    return this.http.post<ApiResponse>(`${BASE_URL}/login`, username);
-  }
-
-  logout(): Observable<ApiResponse> {
-    return this.http.get<ApiResponse>(`${BASE_URL}/logout`);
+    return this.http.post<ApiResponse>(`${BASE_URL}/bikes/return/${id}`, { latitude, longitude });
   }
 }

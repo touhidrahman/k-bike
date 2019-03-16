@@ -11,15 +11,15 @@ export class MapComponent implements OnInit {
 
   bikes: Array<Bike>;
   rentedBike: Bike;
-  user: {username: string};
+  user: { username: string };
 
-  constructor(private api: ApiService) {}
+  constructor(private api: ApiService) { }
 
   ngOnInit(): void {
-    this.api.getLoggedInUser().subscribe(res => {
-      this.user = res.data;
-      console.log('user :', this.user); // ! remove
-    });
+    // this.api.getLoggedInUser().subscribe(res => {
+    //   this.user = res.data;
+    //   console.log('user :', this.user); // ! remove
+    // });
 
     this.api.getBikes().subscribe(res => {
       this.bikes = res.data;

@@ -1,17 +1,18 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule }   from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
 import { AgmCoreModule } from '@agm/core';
-import { HttpClientModule } from '@angular/common/http';
-import { LoginComponent } from './login/login.component';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { LoginComponent } from './auth/login/login.component';
 import { MapComponent } from './map/map.component';
+import { AuthInterceptor } from './auth/auth.interceptor';
 
 @NgModule({
-   declarations: [
+  declarations: [
     AppComponent,
     LoginComponent,
     MapComponent,
@@ -25,7 +26,13 @@ import { MapComponent } from './map/map.component';
       apiKey: 'AIzaSyDK51O5ilaoe3wHk53UkpeSbkw5srJ2jj8'
     })
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true,
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
