@@ -4,7 +4,8 @@ const bikeSchema = new mongoose.Schema({
   name: String,
   latitude: Number,
   longitude: Number,
-  rented: Boolean
+  rented: Boolean,
+  rentedBy: String,
 }, {
   timestamps: true
 });

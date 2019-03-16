@@ -5,7 +5,8 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 
 // Get API routes
-const bikeRoutes = require('./routes/bike');
+const bikeRoutes = require('./routes/bike.routes');
+const userRoutes = require('./routes/user.routes');
 
 const app = express();
 
@@ -55,5 +56,6 @@ app.use((req, res, next) => {
 
 // Set api routes
 app.use('/api/bikes', bikeRoutes);
+app.use('/api/users', userRoutes);
 
 module.exports = app;
