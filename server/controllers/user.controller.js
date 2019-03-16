@@ -22,7 +22,8 @@ exports.createUser = (req, res, next) => {
     });
 }
 
-// Simulate user log in, not for production
+// Simulate user log in, accept any username and consider
+// the username is already there :)
 exports.userLogin = (req, res, next) => {
   let fetchedUser;
 

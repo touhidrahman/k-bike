@@ -5,6 +5,7 @@ export interface Bike {
   longitude?: number;
   rented?: boolean;
   rentedBy?: string;
+  [key: string]: any;
 }
 
 export interface ApiResponse {

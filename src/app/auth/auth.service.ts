@@ -67,8 +67,12 @@ export class AuthService {
     this.router.navigate(['/']);
   }
 
-  getLoggedInUser(): Observable<ApiResponse> {
+  getLoggedInUser() {
     return this.http.get<ApiResponse>(`${BASE_URL}/users/me`);
+  }
+
+  getLoggedInUserId() {
+    return this.userId;
   }
 
   autoAuthUser() {
@@ -76,6 +80,7 @@ export class AuthService {
     if (!authInformation) {
       return;
     }
+
     const now = new Date();
     const expiresIn = authInformation.expirationDate.getTime() - now.getTime();
     if (expiresIn > 0) {
@@ -97,7 +102,6 @@ export class AuthService {
     localStorage.setItem('token', token);
     localStorage.setItem('expiration', expirationDate.toISOString());
     localStorage.setItem('userId', userId);
-    console.log('saved to local storage :'); // ! remove
   }
 
   private clearAuthData() {

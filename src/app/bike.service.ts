@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
-import { of, Observable } from 'rxjs';
+import { of, Observable, Subject } from 'rxjs';
 import { Bike, ApiResponse, BASE_URL } from './app.types';
 
 @Injectable({
@@ -9,11 +9,30 @@ import { Bike, ApiResponse, BASE_URL } from './app.types';
 })
 export class BikeService {
 
+  private bikes: Array<Bike>;
+  private bikesUpdated = new Subject<{ bikes: Array<Bike> }>();
+
   constructor(private http: HttpClient) { }
 
-  getBikes(): Observable<ApiResponse> {
-    return this.http
-      .get<ApiResponse>(`${BASE_URL}/bikes`);
+  getBikes() {
+    this.http.get<ApiResponse>(`${BASE_URL}/bikes`)
+      .pipe(
+        map(responseData => {
+          return {
+            bikes: responseData.data,
+          };
+        }),
+      )
+      .subscribe(transformedData => {
+        this.bikes = transformedData.bikes;
+        this.bikesUpdated.next({
+          bikes: [...this.bikes]
+        });
+      });
+  }
+
+  getBikesUpdatedListener() {
+    return this.bikesUpdated.asObservable();
   }
 
   createBike(bike: Bike): Observable<ApiResponse> {

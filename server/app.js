@@ -36,9 +36,8 @@ app.use(bodyParser.json({
   type: 'application/vnd.api+json'
 }));
 
-// Point static path to dist
-app.use(express.static(path.join(__dirname, 'dist')));
-app.use(express.static(path.join(__dirname, 'src', 'assets')));
+// Point static files
+app.use(express.static(path.join(__dirname, 'assets')));
 
 // CORS
 app.use((req, res, next) => {
