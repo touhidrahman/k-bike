@@ -1,0 +1,21 @@
+<div class="form" *ngIf="!success">
+    <p>
+        Enter a unique username to create a new user.
+    </p>
+    <form (submit)="signup(signupForm)" #signupForm="ngForm">
+        <input name="username" ngModel type="text" placeholder="Username" #usernameInput="ngModel" required>
+        <button type="submit">Signup</button>
+    </form>
+</div>
+<div *ngIf="success">
+    User created!
+
+    <p>
+        Go to <a [routerLink]="[ '/login' ]">Login</a> and use the username you just created to simulate login.
+    </p>
+</div>
+<p *ngIf="!success">
+    <a [routerLink]="[ '/' ]">Home</a>
+    <br>
+    <a [routerLink]="[ '/login' ]">Login</a>
+</p>

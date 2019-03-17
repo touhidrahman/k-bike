@@ -1,11 +1,16 @@
-<div class="container">
-    <div class="login-form">
-        <p *ngIf="isLoading">Logging you in...</p>
-        <form (submit)="onLogin(loginForm)" #loginForm="ngForm" *ngIf="!isLoading">
-            <input matInput name="username" ngModel type="text" placeholder="Username" #usernameInput="ngModel"
-                required>
-            <p *ngIf="usernameInput.invalid">Please enter a valid username</p>
-            <button type="submit" *ngIf="!isLoading">Login</button>
-        </form>
-    </div>
+<div class="form">
+    <p>
+        Enter your username
+    </p>
+    <p *ngIf="isLoading">Logging you in...</p>
+    <form (submit)="onLogin(loginForm)" #loginForm="ngForm" *ngIf="!isLoading">
+        <input name="username" ngModel type="text" placeholder="Username" #usernameInput="ngModel" required>
+        <button type="submit" *ngIf="!isLoading">Login</button>
+    </form>
+
+    <p>
+        <a [routerLink]="[ '/' ]">Home</a>
+        <br>
+        <a [routerLink]="[ '/signup' ]">Signup</a>
+    </p>
 </div>
