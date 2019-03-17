@@ -54,11 +54,18 @@ export class MapComponent implements OnInit, OnDestroy {
   }
 
   rentBike(bike: Bike): void {
-    this.bikeService.rentBike(bike._id).subscribe(v => console.log(v));
+    this.bikeService.rentBike(bike._id).subscribe(value => {
+      bike.rented = true;
+      bike.rentedBy = this.userId;
+    });
   }
 
   returnBike(bike: Bike, lat: number, long: number): void {
     this.bikeService.returnBike(bike._id, lat, long).subscribe(v => console.log(v));
+  }
+
+  logout() {
+    this.authService.logout();
   }
 
   ngOnDestroy(): void {

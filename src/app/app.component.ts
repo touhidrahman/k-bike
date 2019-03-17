@@ -14,7 +14,4 @@ export class AppComponent implements OnInit {
     this.auth.autoAuthUser();
   }
 
-  logout() {
-    this.auth.logout();
-  }
 }
