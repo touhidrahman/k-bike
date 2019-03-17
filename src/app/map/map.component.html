@@ -1,31 +1,50 @@
-<div class="map-container">
-    <agm-map class="map" [latitude]="50.13" [longitude]="8.7">
-        <ng-container *ngFor="let bike of bikes">
-            <agm-marker *ngIf="bike.rented" [latitude]="bike.latitude" [longitude]="bike.longitude" [iconUrl]="'http://localhost:3000/marker-disabled.png'">
-                <agm-info-window>
-                    <h3>Bike {{ bike.name }}</h3>
-                    <small>This bike is NOT for rent.</small>
+<agm-map
+    [latitude]="mapCenterLat"
+    [longitude]="mapCenterLong"
+    [ngStyle]="{'height.px': screenHeight}"
+>
+    <ng-container *ngFor="let bike of bikes">
+        <agm-marker
+            *ngIf="bike.rented"
+            [latitude]="bike.latitude"
+            [longitude]="bike.longitude"
+            [iconUrl]="'http://localhost:3000/marker-disabled.png'"
+        >
+            <agm-info-window>
+                <h3>Bike {{ bike.name }}</h3>
+                <small>This bike is NOT for rent.</small>
 
-                    <button *ngIf="bike.rented && bike.rentedBy === userId" class="rent-button" (click)="returnBike(bike, bike.latitude, bike.longitude)">
-                        Return Bicycle
-                    </button>
-                </agm-info-window>
-            </agm-marker>
+                <button
+                    *ngIf="bike.rented && bike.rentedBy === userId"
+                    class="rent-button"
+                    (click)="returnBike(bike, bike.latitude, bike.longitude)"
+                >
+                    Return Bicycle
+                </button>
+            </agm-info-window>
+        </agm-marker>
 
-            <agm-marker *ngIf="!bike.rented" [latitude]="bike.latitude" [longitude]="bike.longitude">
-                <agm-info-window>
-                    <h3>Bike {{ bike.name }}</h3>
-                    <small>This bike is for rent.</small>
-                    <ol>
-                        <li>Click on "Rent Bicycle"</li>
-                        <li>Bicycle lock will unlock automatically</li>
-                        <li>Adjust saddle height</li>
-                    </ol>
-                    <button *ngIf="!bike.rented" class="rent-button" (click)="rentBike(bike)">
-                        Rent Bicycle
-                    </button>
-                </agm-info-window>
-            </agm-marker>
-        </ng-container>
-    </agm-map>
-</div>
+        <agm-marker
+            *ngIf="!bike.rented"
+            [latitude]="bike.latitude"
+            [longitude]="bike.longitude"
+        >
+            <agm-info-window>
+                <h3>Bike {{ bike.name }}</h3>
+                <small>This bike is for rent.</small>
+                <ol>
+                    <li>Click on "Rent Bicycle"</li>
+                    <li>Bicycle lock will unlock automatically</li>
+                    <li>Adjust saddle height</li>
+                </ol>
+                <button
+                    *ngIf="!bike.rented"
+                    class="rent-button"
+                    (click)="rentBike(bike)"
+                >
+                    Rent Bicycle
+                </button>
+            </agm-info-window>
+        </agm-marker>
+    </ng-container>
+</agm-map>
