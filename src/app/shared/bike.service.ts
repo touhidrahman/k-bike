@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { of, Observable, Subject } from 'rxjs';
 import { Bike, ApiResponse } from './app.types';
-import { environment } from '../environments/environment';
+import { environment } from '../../environments/environment';
 
 const BASE_URL = environment.apiUrl + '/bikes';
 

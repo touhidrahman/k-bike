@@ -13,7 +13,6 @@ import { MapComponent } from './map/map.component';
 import { AuthInterceptor } from './auth/auth.interceptor';
 import { AngularMaterialModule } from './angular-material.module';
 import { ErrorInterceptor } from './error.interceptor';
-import { ErrorComponent } from './error/error.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { environment } from 'src/environments/environment';
 import { RegisterComponent } from './auth/register/register.component';
@@ -23,7 +22,6 @@ import { RegisterComponent } from './auth/register/register.component';
     AppComponent,
     LoginComponent,
     MapComponent,
-    ErrorComponent,
     RegisterComponent,
   ],
   imports: [
@@ -51,6 +49,5 @@ import { RegisterComponent } from './auth/register/register.component';
     },
   ],
   bootstrap: [AppComponent],
-  entryComponents: [ErrorComponent],
 })
 export class AppModule { }

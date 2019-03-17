@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
-import { Bike } from '../app.types';
-import { BikeService } from '../bike.service';
+import { Bike } from '../shared/app.types';
+import { BikeService } from '../shared/bike.service';
 import { Subject, Subscription } from 'rxjs';
 import { AuthService } from '../auth/auth.service';
 
@@ -41,6 +41,7 @@ export class MapComponent implements OnInit, OnDestroy {
     this.bikes$ = this.bikeService.getBikesUpdatedListener().subscribe(value => {
       this.bikes = value.bikes;
 
+      // calculate map center (average of lats and longs)
       let latSum = 0;
       let longSum = 0;
       this.bikes.forEach(it => {

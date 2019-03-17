@@ -2,8 +2,7 @@ import { HttpInterceptor, HttpRequest, HttpHandler, HttpErrorResponse } from '@a
 import { catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 import { Injectable } from '@angular/core';
-import { MatDialog, MatSnackBar } from '@angular/material';
-import { ErrorComponent } from './error/error.component';
+import { MatSnackBar } from '@angular/material';
 
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
@@ -14,7 +13,7 @@ export class ErrorInterceptor implements HttpInterceptor {
     return next.handle(req).pipe(
       catchError((err: HttpErrorResponse) => {
         const errorMessage = err.error.message ? err.error.message : 'An unknown error occurred!';
-        // this.matSnackbar.open(errorMessage, 'OK', { duration: 3000 });
+        this.matSnackbar.open(errorMessage, 'OK', { duration: 3000 });
         window.alert(errorMessage);
         return throwError(err);
       })
