@@ -1,22 +1,7 @@
-<agm-map
-    [latitude]="mapCenterLat"
-    [longitude]="mapCenterLong"
-    [ngStyle]="{'height.px': screenHeight}"
->
-    <agm-marker
-        *ngFor="let bike of bikes"
-        [latitude]="bike.latitude"
-        [longitude]="bike.longitude"
-        [iconUrl]="bike.rented ? 'http://localhost:3000/marker-disabled.png' : ''"
-    >
-        <agm-snazzy-info-window
-            [closeWhenOthersOpen]="true"
-            [borderRadius]="10"
-            [closeOnMapClick]="true"
-            [maxWidth]="400"
-            [maxHeight]="400"
-            [padding]="5"
-        >
+<agm-map [latitude]="mapCenterLat" [longitude]="mapCenterLong" [ngStyle]="{'height.px': screenHeight}">
+    <agm-marker *ngFor="let bike of bikes" [latitude]="bike.latitude" [longitude]="bike.longitude" [iconUrl]="bike.rented ? 'http://localhost:3000/marker-disabled.png' : ''">
+        <agm-snazzy-info-window [closeWhenOthersOpen]="true" [borderRadius]="10" [closeOnMapClick]="true" [maxWidth]="400"
+            [maxHeight]="400" [padding]="5">
             <ng-template>
                 <h3>Bike {{ bike.name }}</h3>
                 <small>
@@ -29,18 +14,10 @@
                 </ol>
 
                 <div>
-                    <button
-                        *ngIf="!bike.rented"
-                        class="rent-button"
-                        (click)="rentBike(bike)"
-                    >
+                    <button *ngIf="!bike.rented" class="rent-button" (click)="rentBike(bike)">
                         Rent Bicycle
                     </button>
-                    <button
-                        *ngIf="bike.rented && bike.rentedBy === userId"
-                        class="rent-button"
-                        (click)="returnBike(bike, bike.latitude, bike.longitude)"
-                    >
+                    <button *ngIf="bike.rented && bike.rentedBy === userId" class="rent-button" (click)="returnBike(bike, bike.latitude, bike.longitude)">
                         Return Bicycle
                     </button>
                 </div>
@@ -50,5 +27,10 @@
 </agm-map>
 
 <div class="overlay-nav">
-    <button (click)="logout()">Logout</button>
+    <a [routerLink]="[ '/login' ]" *ngIf="!isLoggedIn">
+        Login
+    </a>
+    <button (click)="logout()" *ngIf="isLoggedIn">
+        Logout
+    </button>
 </div>

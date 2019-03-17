@@ -4,9 +4,9 @@ import {
   MatCardModule,
   MatButtonModule,
   MatToolbarModule,
-  MatExpansionModule,
   MatProgressSpinnerModule,
-  MatDialogModule
+  MatDialogModule,
+  MatSnackBarModule,
 } from '@angular/material';
 
 @NgModule({
@@ -15,9 +15,9 @@ import {
     MatCardModule,
     MatButtonModule,
     MatToolbarModule,
-    MatExpansionModule,
     MatProgressSpinnerModule,
     MatDialogModule,
+    MatSnackBarModule,
   ]
 })
 export class AngularMaterialModule { }

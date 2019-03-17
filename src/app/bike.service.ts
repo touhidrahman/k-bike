@@ -2,7 +2,10 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { of, Observable, Subject } from 'rxjs';
-import { Bike, ApiResponse, BASE_URL } from './app.types';
+import { Bike, ApiResponse } from './app.types';
+import { environment } from '../environments/environment';
+
+const BASE_URL = environment.apiUrl + '/bikes';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +18,7 @@ export class BikeService {
   constructor(private http: HttpClient) { }
 
   getBikes() {
-    this.http.get<ApiResponse>(`${BASE_URL}/bikes`)
+    this.http.get<ApiResponse>(`${BASE_URL}`)
       .pipe(
         map(responseData => {
           return {
@@ -36,26 +39,26 @@ export class BikeService {
   }
 
   createBike(bike: Bike): Observable<ApiResponse> {
-    return this.http.post<ApiResponse>(`${BASE_URL}/bikes`, bike);
+    return this.http.post<ApiResponse>(`${BASE_URL}`, bike);
   }
 
   getBikeById(id: string): Observable<ApiResponse> {
-    return this.http.get<ApiResponse>(`${BASE_URL}/bikes/${id}`);
+    return this.http.get<ApiResponse>(`${BASE_URL}/${id}`);
   }
 
   deleteBike(id: string): Observable<ApiResponse> {
-    return this.http.delete<ApiResponse>(`${BASE_URL}/bikes/${id}`);
+    return this.http.delete<ApiResponse>(`${BASE_URL}/${id}`);
   }
 
   getCurrentlyRentedBike(): Observable<ApiResponse> {
-    return this.http.get<ApiResponse>(`${BASE_URL}/bikes/my-bike`);
+    return this.http.get<ApiResponse>(`${BASE_URL}/my-bike`);
   }
 
   rentBike(id: string): Observable<ApiResponse> {
-    return this.http.get<ApiResponse>(`${BASE_URL}/bikes/rent/${id}`);
+    return this.http.get<ApiResponse>(`${BASE_URL}/rent/${id}`);
   }
 
   returnBike(id: string, latitude: number, longitude: number): Observable<ApiResponse> {
-    return this.http.post<ApiResponse>(`${BASE_URL}/bikes/return/${id}`, { latitude, longitude });
+    return this.http.post<ApiResponse>(`${BASE_URL}/return/${id}`, { latitude, longitude });
   }
 }

@@ -1,8 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, Subject } from 'rxjs';
-import { ApiResponse, BASE_URL } from '../app.types';
+import { ApiResponse } from '../app.types';
 import { Router } from '@angular/router';
+import { environment } from '../../environments/environment';
+
+const BASE_URL = environment.apiUrl + '/users';
 
 @Injectable({
   providedIn: 'root'
@@ -29,11 +32,11 @@ export class AuthService {
   }
 
   createUser(username: string): Observable<ApiResponse> {
-    return this.http.post<ApiResponse>(`${BASE_URL}/users`, username);
+    return this.http.post<ApiResponse>(`${BASE_URL}`, { username });
   }
 
   login(username: string): void {
-    this.http.post<ApiResponse>(`${BASE_URL}/users/login`, username)
+    this.http.post<ApiResponse>(`${BASE_URL}/login`, { username })
       .subscribe(
         response => {
           if (response.data && response.data.token) {
@@ -68,7 +71,7 @@ export class AuthService {
   }
 
   getLoggedInUser() {
-    return this.http.get<ApiResponse>(`${BASE_URL}/users/me`);
+    return this.http.get<ApiResponse>(`${BASE_URL}/me`);
   }
 
   getLoggedInUserId() {

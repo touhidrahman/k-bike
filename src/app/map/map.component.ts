@@ -14,6 +14,7 @@ export class MapComponent implements OnInit, OnDestroy {
   bikes: Array<Bike>;
   userId: string;
   bikes$: Subscription;
+  isLoggedIn: boolean;
 
   screenHeight: number;
   screenWidth: number;
@@ -51,6 +52,7 @@ export class MapComponent implements OnInit, OnDestroy {
     });
 
     this.userId = this.authService.getLoggedInUserId();
+    this.isLoggedIn = this.authService.isLoggedIn();
   }
 
   rentBike(bike: Bike): void {
@@ -60,8 +62,13 @@ export class MapComponent implements OnInit, OnDestroy {
     });
   }
 
+  // For now, we are reusing the lat long from bike
+  // in actual case, new lat long will be received
   returnBike(bike: Bike, lat: number, long: number): void {
-    this.bikeService.returnBike(bike._id, lat, long).subscribe(v => console.log(v));
+    this.bikeService.returnBike(bike._id, lat, long).subscribe(value => {
+      bike.rented = false;
+      bike.rentedBy = null;
+    });
   }
 
   logout() {

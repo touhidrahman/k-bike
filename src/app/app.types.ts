@@ -13,5 +13,3 @@ export interface ApiResponse {
   message?: string;
   data?: any;
 }
-
-export const BASE_URL = 'http://localhost:3000/api';

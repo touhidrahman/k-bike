@@ -12,31 +12,43 @@ import { LoginComponent } from './auth/login/login.component';
 import { MapComponent } from './map/map.component';
 import { AuthInterceptor } from './auth/auth.interceptor';
 import { AngularMaterialModule } from './angular-material.module';
+import { ErrorInterceptor } from './error.interceptor';
+import { ErrorComponent } from './error/error.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { environment } from 'src/environments/environment';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     MapComponent,
+    ErrorComponent,
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     FormsModule,
     AppRoutingModule,
     AngularMaterialModule,
     HttpClientModule,
     AgmCoreModule.forRoot({
-      apiKey: 'AIzaSyDK51O5ilaoe3wHk53UkpeSbkw5srJ2jj8'
+      apiKey: environment.gMapsApiKey,
     }),
-    AgmSnazzyInfoWindowModule
+    AgmSnazzyInfoWindowModule,
   ],
   providers: [
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
       multi: true,
-    }
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: ErrorInterceptor,
+      multi: true,
+    },
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [ErrorComponent],
 })
 export class AppModule { }

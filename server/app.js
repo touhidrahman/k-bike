@@ -14,7 +14,7 @@ mongoose.set('useFindAndModify', false);
 mongoose.set('useCreateIndex', true);
 mongoose.set('useNewUrlParser', true);
 mongoose
-  .connect('mongodb://localhost:27017/k-bike-data')
+  .connect('mongodb://commonuser:1unsafepass@ds247223.mlab.com:47223/k-bike-data')
   .then(() => {
     console.log("Connected to database!");
   })

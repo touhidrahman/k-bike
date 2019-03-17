@@ -22,8 +22,7 @@ exports.createUser = (req, res, next) => {
     });
 }
 
-// Simulate user log in, accept any username and consider
-// the username is already there :)
+// Simulate user log in, no password required :)
 exports.userLogin = (req, res, next) => {
   let fetchedUser;
 
@@ -33,21 +32,13 @@ exports.userLogin = (req, res, next) => {
     .then(user => {
       if (!user) {
         return res.status(401).json({
-          message: "Auth failed",
+          message: "The user doesn't exist",
           error: true,
         });
       }
 
       fetchedUser = user;
-      return user;
-    })
-    .then(result => {
-      if (!result) {
-        return res.status(401).json({
-          message: "Auth failed",
-          error: true,
-        });
-      }
+
       const token = jwt.sign({
           username: fetchedUser.username,
           userId: fetchedUser._id
@@ -72,6 +63,19 @@ exports.userLogin = (req, res, next) => {
         message: "Invalid authentication credentials!"
       });
     });
+}
+
+/**
+ * Get all users (convenience method)
+ */
+exports.getUsers = (req, res, next) => {
+  User.find()
+    .then(result => {
+      res.status(200).json({
+        message: "Fetched all users successfully",
+        data: result,
+      });
+    })
 }
 
 /**
