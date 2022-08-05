@@ -30,7 +30,7 @@
     "core-js": "^2.5.4",
     "express": "^4.16.4",
     "jsonwebtoken": "^8.5.0",
-    "mongoose": "^5.4.17",
+    "mongoose": "^5.7.5",
     "rxjs": "~6.3.3",
     "snazzy-info-window": "^1.1.1",
     "tslib": "^1.9.0",
